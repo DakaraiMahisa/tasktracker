@@ -1,0 +1,35 @@
+# ─── Frontend Deployment ───────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: sirdm/tasktracker-frontend:latest
+          ports:
+            - containerPort: 80
+
+---
+# ─── Frontend Service — NodePort for external access ──
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  type: NodePort           # exposes outside the cluster
+  selector:
+    app: frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080       # access via this port

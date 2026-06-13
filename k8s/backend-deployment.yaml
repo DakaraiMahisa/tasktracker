@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: sirdm/tasktracker-backend:latest    # ← image name, not a secret
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: tasktracker-config       # pulls all ConfigMap values
+            - secretRef:
+                name: tasktracker-secret       # pulls all Secret values
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 8080
+      targetPort: 8080
