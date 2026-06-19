@@ -47,8 +47,6 @@ services:
     container_name: tasktracker-frontend
     ports:
       - "3000:80"          # Nginx serves on 80 inside container
-    environment:
-      BACKEND_HOST: backend
     depends_on:
       - backend
 
